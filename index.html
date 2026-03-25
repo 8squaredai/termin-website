@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terminbuchung – Privatpraxis Prof. Dr. med. O. Abri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    /* =====================
+       CSS RESET & BASE
+    ===================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --green-dark:   #2d5a3d;
+      --green-mid:    #3b6e4d;
+      --green-light:  #4d8562;
+      --green-soft:   #eef4f0;
+      --green-border: #c3d9cb;
+      --white:        #ffffff;
+      --gray-50:      #f9fafb;
+      --gray-100:     #f3f4f6;
+      --gray-200:     #e5e7eb;
+      --gray-400:     #9ca3af;
+      --gray-600:     #4b5563;
+      --gray-800:     #1f2937;
+      --red-soft:     #fef2f2;
+      --red-border:   #fecaca;
+      --red-text:     #dc2626;
+      --radius-sm:    8px;
+      --radius-md:    12px;
+      --radius-lg:    20px;
+      --shadow-sm:    0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+      --shadow-md:    0 4px 16px rgba(0,0,0,.10);
+      --shadow-lg:    0 10px 40px rgba(0,0,0,.12);
+      --transition:   0.2s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-800);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* =====================
+       HEADER
+    ===================== */
+    header {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-light) 100%);
+      color: var(--white);
+      padding: 20px 24px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 300px;
+      height: 300px;
+      background: rgba(255,255,255,.05);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -60%;
+      left: -5%;
+      width: 200px;
+      height: 200px;
+      background: rgba(255,255,255,.04);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .header-logo svg {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      font-size: clamp(1rem, 3vw, 1.25rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+    }
+
+    .header-subtitle {
+      font-size: clamp(.8rem, 2.5vw, .9rem);
+      font-weight: 400;
+      opacity: .85;
+      margin-top: 2px;
+    }
+
+    .tiktok-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 10px;
+      padding: 5px 12px;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 20px;
+      color: var(--white);
+      text-decoration: none;
+      font-size: .78rem;
+      font-weight: 600;
+      letter-spacing: .01em;
+      transition: background var(--transition), border-color var(--transition);
+    }
+
+    .tiktok-link:hover {
+      background: rgba(255,255,255,.25);
+      border-color: rgba(255,255,255,.5);
+    }
+
+    /* =====================
+       MAIN CONTENT
+    ===================== */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px 40px;
+    }
+
+    /* Full-width main when showing Cal embed */
+    main.cal-active {
+      padding: 0;
+      align-items: stretch;
+    }
+
+    /* =====================
+       PROGRESS BAR
+    ===================== */
+    .progress-wrap {
+      width: 100%;
+      max-width: 520px;
+      margin-bottom: 28px;
+    }
+
+    .progress-steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+    }
+
+    .step-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--gray-200);
+      background: var(--white);
+      color: var(--gray-400);
+      font-size: .8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+
+    .step-dot.active {
+      border-color: var(--green-mid);
+      background: var(--green-mid);
+      color: var(--white);
+    }
+
+    .step-dot.done {
+      border-color: var(--green-light);
+      background: var(--green-light);
+      color: var(--white);
+    }
+
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: var(--gray-200);
+      max-width: 80px;
+      transition: background var(--transition);
+    }
+
+    .step-line.done {
+      background: var(--green-light);
+    }
+
+    /* =====================
+       CARD
+    ===================== */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 520px;
+      animation: fadeSlideIn .3s ease forwards;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-heading {
+      font-size: clamp(1.1rem, 3vw, 1.35rem);
+      font-weight: 700;
+      color: var(--gray-800);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .card-subtext {
+      font-size: .92rem;
+      color: var(--gray-600);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    /* =====================
+       STEP 1 – CHOICE CARDS
+    ===================== */
+    .choice-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 420px) {
+      .choice-grid { grid-template-columns: 1fr; }
+    }
+
+    .choice-card {
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 22px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+      background: var(--white);
+    }
+
+    .choice-card:hover, .choice-card:focus {
+      border-color: var(--green-mid);
+      box-shadow: 0 0 0 3px rgba(46,125,50,.12);
+      outline: none;
+    }
+
+    .choice-card:active {
+      background: var(--green-soft);
+    }
+
+    .choice-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .choice-label {
+      font-size: .93rem;
+      font-weight: 600;
+      color: var(--gray-800);
+      line-height: 1.4;
+    }
+
+    .choice-sublabel {
+      font-size: .8rem;
+      color: var(--gray-400);
+      margin-top: 4px;
+    }
+
+    /* =====================
+       STEP 2 – FORM
+    ===================== */
+    .info-box {
+      background: var(--green-soft);
+      border: 1px solid var(--green-border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: .86rem;
+      color: var(--green-dark);
+      line-height: 1.5;
+      margin-bottom: 22px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .info-box svg { flex-shrink: 0; margin-top: 1px; }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin-bottom: 6px;
+    }
+
+    input[type="email"],
+    input[type="date"],
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: .95rem;
+      color: var(--gray-800);
+      background: var(--white);
+      transition: border-color var(--transition), box-shadow var(--transition);
+      -webkit-appearance: none;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--green-mid);
+      box-shadow: 0 0 0 3px rgba(46,125,50,.12);
+    }
+
+    input.error-field {
+      border-color: var(--red-text);
+      box-shadow: 0 0 0 3px rgba(220,38,38,.10);
+    }
+
+    .field-error {
+      font-size: .8rem;
+      color: var(--red-text);
+      margin-top: 5px;
+      display: none;
+    }
+
+    .field-error.visible { display: block; }
+
+    /* =====================
+       BUTTONS
+    ===================== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 24px;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all var(--transition);
+      text-decoration: none;
+      line-height: 1;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green-dark), var(--green-light));
+      color: var(--white);
+      width: 100%;
+      margin-top: 4px;
+      box-shadow: 0 2px 8px rgba(46,125,50,.3);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 4px 16px rgba(46,125,50,.4);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary:disabled {
+      opacity: .65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: var(--white);
+      color: var(--green-dark);
+      border: 1.5px solid var(--green-mid);
+      width: 100%;
+    }
+
+    .btn-secondary:hover {
+      background: var(--green-soft);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--gray-600);
+      font-size: .85rem;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border: none;
+    }
+
+    .btn-ghost:hover { color: var(--green-dark); background: var(--green-soft); }
+
+    /* =====================
+       LOADING SPINNER
+    ===================== */
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(255,255,255,.4);
+      border-top-color: var(--white);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      display: none;
+    }
+
+    .spinner.visible { display: block; }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* =====================
+       STEP 3a – SUCCESS
+    ===================== */
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      background: var(--green-soft);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      animation: popIn .4s cubic-bezier(.34,1.56,.64,1) forwards;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    .checkmark-path {
+      stroke-dasharray: 50;
+      stroke-dashoffset: 50;
+      animation: drawCheck .5s ease .2s forwards;
+    }
+
+    @keyframes drawCheck {
+      to { stroke-dashoffset: 0; }
+    }
+
+    .success-heading {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--green-dark);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .success-text {
+      font-size: .92rem;
+      color: var(--gray-600);
+      text-align: center;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    /* =====================
+       STEP 3b – ERROR
+    ===================== */
+    .error-icon {
+      width: 72px;
+      height: 72px;
+      background: var(--red-soft);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      animation: popIn .4s cubic-bezier(.34,1.56,.64,1) forwards;
+    }
+
+    .error-heading {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--gray-800);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .error-text {
+      font-size: .88rem;
+      color: var(--gray-600);
+      text-align: center;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .error-alert {
+      background: var(--red-soft);
+      border: 1px solid var(--red-border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: .86rem;
+      color: var(--red-text);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .btn-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* =====================
+       CAL EMBED SECTION
+    ===================== */
+    #stepCal {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      flex: 1;
+      animation: fadeSlideIn .35s ease forwards;
+    }
+
+    /* Email hint bar – shown only for Bestandspatienten */
+    .email-hint-bar {
+      background: var(--green-soft);
+      border-bottom: 1px solid var(--green-border);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .email-hint-label {
+      font-size: .88rem;
+      color: var(--green-dark);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .email-hint-value {
+      font-weight: 700;
+      color: var(--green-dark);
+      background: rgba(46,125,50,.1);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: .9rem;
+      letter-spacing: .01em;
+      cursor: text;
+      user-select: all;
+    }
+
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      background: var(--white);
+      border: 1.5px solid var(--green-mid);
+      border-radius: 20px;
+      font-family: inherit;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--green-dark);
+      cursor: pointer;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+
+    .copy-btn:hover {
+      background: var(--green-mid);
+      color: var(--white);
+    }
+
+    .copy-btn.copied {
+      background: var(--green-mid);
+      color: var(--white);
+      border-color: var(--green-mid);
+    }
+
+    /* Cal.com embed container */
+    .cal-embed-wrap {
+      flex: 1;
+      min-height: 700px;
+      position: relative;
+    }
+
+    .cal-embed-wrap > div {
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 700px;
+    }
+
+    /* =====================
+       MODERNIZATION NOTICE
+    ===================== */
+    .notice-box {
+      background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+      border: 1px solid #bae6fd;
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      width: 100%;
+      max-width: 520px;
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .notice-icon {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .notice-text {
+      font-size: .84rem;
+      color: #0369a1;
+      line-height: 1.6;
+    }
+
+    .notice-text strong { font-weight: 600; }
+
+    /* =====================
+       FOOTER
+    ===================== */
+    footer {
+      text-align: center;
+      padding: 20px 16px;
+      background: var(--white);
+      border-top: 1px solid var(--gray-200);
+    }
+
+    .footer-privacy {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .8rem;
+      color: var(--gray-400);
+      max-width: 480px;
+      line-height: 1.5;
+    }
+
+    .footer-privacy svg { flex-shrink: 0; }
+
+    /* =====================
+       BACK BUTTON ROW
+    ===================== */
+    .back-row {
+      width: 100%;
+      max-width: 520px;
+      margin-bottom: 12px;
+    }
+
+    /* =====================
+       BOOKING CONFIRMATION
+    ===================== */
+    #stepBookingConfirm {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px 48px;
+      animation: fadeSlideIn .35s ease forwards;
+    }
+
+    .confirm-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 520px;
+      overflow: hidden;
+    }
+
+    .confirm-top {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-light) 100%);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .confirm-top::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.06);
+      pointer-events: none;
+    }
+
+    .confirm-praxis-label {
+      font-size: .7rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.55);
+      margin-bottom: 16px;
+      position: relative; z-index: 1;
+    }
+
+    .confirm-check-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+      position: relative; z-index: 1;
+    }
+
+    .confirm-check-circle {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.15);
+      border: 1.5px solid rgba(255,255,255,.3);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      animation: popIn .5s cubic-bezier(.34,1.56,.64,1) .2s both;
+    }
+
+    .confirm-check-path {
+      stroke-dasharray: 30;
+      stroke-dashoffset: 30;
+      animation: drawCheck .4s ease .55s forwards;
+    }
+
+    .confirm-title {
+      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+      letter-spacing: -.02em;
+    }
+
+    .confirm-subtitle {
+      font-size: .85rem;
+      color: rgba(255,255,255,.65);
+      font-weight: 400;
+      position: relative; z-index: 1;
+    }
+
+    /* Booking strip */
+    .confirm-strip {
+      display: flex;
+      background: var(--green-soft);
+      border-bottom: 1px solid var(--green-border);
+    }
+
+    .strip-item {
+      flex: 1;
+      padding: 12px 14px;
+      border-right: 1px solid var(--green-border);
+    }
+
+    .strip-item:last-child { border-right: none; }
+
+    .strip-label {
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--green-mid);
+      margin-bottom: 3px;
+      opacity: .8;
+    }
+
+    .strip-value {
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--gray-800);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .strip-placeholder { color: var(--gray-400); font-weight: 400; font-style: italic; }
+
+    @media (max-width: 480px) {
+      .confirm-strip { flex-direction: column; }
+      .strip-item { border-right: none; border-bottom: 1px solid var(--green-border); }
+      .strip-item:last-child { border-bottom: none; }
+    }
+
+    /* Confirm body */
+    .confirm-body {
+      padding: 28px 32px 32px;
+    }
+
+    @media (max-width: 480px) {
+      .confirm-body { padding: 20px 20px 24px; }
+      .confirm-top  { padding: 24px 20px; }
+    }
+
+    .confirm-message {
+      font-size: .9rem;
+      line-height: 1.7;
+      color: var(--gray-600);
+      margin-bottom: 20px;
+    }
+
+    .confirm-message strong { color: var(--gray-800); font-weight: 600; }
+
+    /* Warning box */
+    .warn-box {
+      background: #fff8f0;
+      border: 1px solid #fcd9b0;
+      border-left: 3px solid #e07b2a;
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .warn-box svg { flex-shrink: 0; color: #e07b2a; margin-top: 1px; }
+
+    .warn-box-title {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: #e07b2a;
+      margin-bottom: 3px;
+    }
+
+    .warn-box-text {
+      font-size: .84rem;
+      line-height: 1.6;
+      color: #7a4010;
+    }
+
+    .warn-box-text strong { font-weight: 600; }
+
+    /* Steps */
+    .confirm-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .confirm-step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .confirm-step-num {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--green-mid);
+      color: var(--white);
+      font-size: .72rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .confirm-step-text {
+      font-size: .86rem;
+      line-height: 1.6;
+      color: var(--gray-600);
+      padding-top: 1px;
+    }
+
+    .confirm-step-text strong { color: var(--gray-800); font-weight: 600; }
+
+    .confirm-divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gray-200), transparent);
+      margin: 20px 0;
+    }
+
+    .confirm-contact {
+      text-align: center;
+      font-size: .8rem;
+      color: var(--gray-400);
+    }
+
+    .confirm-contact a {
+      color: var(--green-mid);
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 1px solid var(--green-border);
+      transition: border-color var(--transition);
+    }
+
+    .confirm-contact a:hover { border-color: var(--green-mid); }
+
+    .confirm-footer {
+      background: var(--gray-50);
+      border-top: 1px solid var(--gray-200);
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .confirm-footer-name {
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--green-dark);
+    }
+
+    .confirm-footer-address {
+      font-size: .72rem;
+      color: var(--gray-400);
+    }
+
+    /* =====================
+       HIDDEN UTILITY
+    ===================== */
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <div class="header-logo">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="16" cy="16" r="15" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+          <path d="M16 8v8M12 12h8" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M9 20c1.5-2 3.5-3 7-3s5.5 1 7 3" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="header-title">Privatpraxis Prof. Dr. med. O. Abri</span>
+      </div>
+      <div class="header-subtitle">Im MVZ der Klinik Schöneberg &nbsp;·&nbsp; Terminbuchung</div>
+      <a href="https://vm.tiktok.com/ZNdfRn7Qk/" target="_blank" rel="noopener noreferrer" class="tiktok-link" aria-label="Praxis auf TikTok folgen">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true">
+          <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.88a8.27 8.27 0 004.84 1.55V7a4.85 4.85 0 01-1.07-.31z"/>
+        </svg>
+        @prof.dr.abri
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main id="mainWrap">
+
+    <!-- PROGRESS -->
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-steps">
+        <div class="step-dot active" id="dot1" aria-label="Schritt 1">1</div>
+        <div class="step-line" id="line1"></div>
+        <div class="step-dot" id="dot2" aria-label="Schritt 2">2</div>
+        <div class="step-line" id="line2"></div>
+        <div class="step-dot" id="dot3" aria-label="Schritt 3">3</div>
+      </div>
+    </div>
+
+    <!-- ===== STEP 1: PATIENT STATUS ===== -->
+    <div id="step1" class="card" role="region" aria-labelledby="step1-heading">
+      <h1 class="card-heading" id="step1-heading">Herzlich willkommen!</h1>
+      <p class="card-subtext">Waren Sie bereits bei uns in Behandlung?</p>
+
+      <div class="choice-grid">
+        <button class="choice-card" onclick="goToStep2()" aria-label="Ja, ich bin bereits Patient/in">
+          <span class="choice-icon" aria-hidden="true">👤</span>
+          <div class="choice-label">Ja, ich bin bereits Patient/in</div>
+          <div class="choice-sublabel">Bestandspatient/in</div>
+        </button>
+        <button class="choice-card" onclick="openCalEmbed(false, null)" aria-label="Nein, ich bin Neupatient/in">
+          <span class="choice-icon" aria-hidden="true">🌱</span>
+          <div class="choice-label">Nein, ich bin Neupatient/in</div>
+          <div class="choice-sublabel">Ersttermin buchen</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== STEP 2: IDENTIFICATION ===== -->
+    <div id="step2" class="hidden" role="region" aria-labelledby="step2-heading">
+      <div class="back-row">
+        <button class="btn btn-ghost" onclick="goToStep1()">
+          ← Zurück
+        </button>
+      </div>
+      <div class="card">
+        <h2 class="card-heading" id="step2-heading">Bitte bestätigen Sie Ihre Identität</h2>
+
+        <div class="info-box">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="7" stroke="#2e7d32" stroke-width="1.5"/>
+            <path d="M8 7v4M8 5.5v.5" stroke="#2e7d32" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span>Zur Sicherheit Ihrer Daten gleichen wir Ihre Angaben mit unserem System ab. Bitte verwenden Sie die E-Mail-Adresse, die bei uns hinterlegt ist.</span>
+        </div>
+
+        <form id="verifyForm" novalidate onsubmit="submitVerification(event)">
+          <div class="form-group">
+            <label for="email">E-Mail-Adresse <span aria-hidden="true" style="color:#dc2626">*</span></label>
+            <input type="email" id="email" name="email" placeholder="ihre@email.de" autocomplete="email" required />
+            <div class="field-error" id="emailError">Bitte geben Sie eine gültige E-Mail-Adresse ein.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="birthdate">Geburtsdatum <span aria-hidden="true" style="color:#dc2626">*</span></label>
+            <input type="date" id="birthdate" name="birthdate" required
+              min="1900-01-01"
+              style="color: var(--gray-800);"
+              aria-describedby="birthdateHint" />
+            <div style="font-size:.78rem;color:var(--gray-400);margin-top:4px;" id="birthdateHint">Format: TT.MM.JJJJ</div>
+            <div class="field-error" id="birthdateError">Bitte geben Sie Ihr Geburtsdatum ein.</div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="verifyBtn">
+            <div class="spinner" id="verifySpinner" aria-hidden="true"></div>
+            <span id="verifyBtnText">Identität prüfen</span>
+          </button>
+        </form>
+
+
+      </div>
+    </div>
+
+    <!-- ===== STEP 3a: SUCCESS ===== -->
+    <div id="step3success" class="hidden" role="region" aria-labelledby="successHeading">
+      <div class="card" style="text-align:center;">
+        <div class="success-icon" aria-hidden="true">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <path class="checkmark-path" d="M8 18L15 25L28 11" stroke="#2e7d32" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h2 class="success-heading" id="successHeading">Willkommen zurück, <span id="patientName">…</span>!</h2>
+        <p class="success-text">Ihre Identität wurde erfolgreich bestätigt.<br>Sie können jetzt Ihren Folgetermin buchen.</p>
+        <button class="btn btn-primary" id="bookingBtn" onclick="proceedToCalFromSuccess()">
+          Termin buchen →
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== STEP 3b: FAILURE ===== -->
+    <div id="step3fail" class="hidden" role="region" aria-labelledby="failHeading">
+      <div class="back-row">
+        <button class="btn btn-ghost" onclick="goToStep2()">
+          ← Zurück
+        </button>
+      </div>
+      <div class="card">
+        <div class="error-icon" aria-hidden="true">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <path d="M11 11L25 25M25 11L11 25" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h2 class="error-heading" id="failHeading">Daten konnten nicht zugeordnet werden</h2>
+        <div class="error-alert" role="alert">
+          Wir konnten Ihre Daten leider nicht zuordnen.
+        </div>
+        <p class="error-text">Dies kann passieren, wenn sich Ihre E-Mail-Adresse geändert hat oder Sie noch nicht in unserem System registriert sind.</p>
+        <div class="btn-stack">
+          <button class="btn btn-secondary" onclick="goToStep2()">
+            Erneut versuchen
+          </button>
+          <button class="btn btn-primary" onclick="openCalEmbed(false, null)">
+            Als Neupatient/in buchen
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STEP 4: CAL.COM EMBED ===== -->
+    <div id="stepCal" class="hidden" role="region" aria-label="Terminbuchung">
+
+      <!-- Back bar -->
+      <div style="padding:10px 16px; background:var(--white); border-bottom:1px solid var(--gray-200); display:flex; align-items:center;">
+        <button class="btn btn-ghost" onclick="goToStep1()" style="padding:6px 10px; font-size:.83rem;">
+          ← Zurück zur Startseite
+        </button>
+      </div>
+
+      <!-- Email reminder bar – only shown for Bestandspatienten -->
+      <div id="emailHintBar" class="email-hint-bar hidden" role="note" aria-label="E-Mail-Erinnerung">
+        <div class="email-hint-label">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true" style="flex-shrink:0">
+            <rect x="1" y="3" width="13" height="9" rx="1.5" stroke="#2e7d32" stroke-width="1.4"/>
+            <path d="M1 4.5l6.5 4.5L14 4.5" stroke="#2e7d32" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          Bitte verwenden Sie für die Buchung diese E-Mail-Adresse:
+          <span id="emailHintValue" class="email-hint-value" title="Klicken zum Markieren"></span>
+        </div>
+        <button class="copy-btn" id="copyBtn" onclick="copyEmail()" aria-label="E-Mail-Adresse kopieren">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+            <rect x="4" y="4" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M3 9H2a1 1 0 01-1-1V2a1 1 0 011-1h6a1 1 0 011 1v1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+          <span id="copyBtnText">Kopieren</span>
+        </button>
+      </div>
+
+      <!-- Cal.com inline embed -->
+      <div class="cal-embed-wrap">
+        <div id="my-cal-inline-neupatient"></div>
+      </div>
+
+    </div>
+
+    <!-- ===== STEP 5: BOOKING CONFIRMATION ===== -->
+    <div id="stepBookingConfirm" class="hidden" role="region" aria-labelledby="confirmHeading">
+      <div class="confirm-card">
+
+        <!-- Top header -->
+        <div class="confirm-top">
+          <div class="confirm-praxis-label">Privatpraxis Prof. Dr. med. O. Abri</div>
+          <div class="confirm-check-row">
+            <div class="confirm-check-circle" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path class="confirm-check-path" d="M5 13l4 4L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="confirm-title" id="confirmHeading">Ihre Buchung ist<br>eingegangen.</div>
+          </div>
+          <div class="confirm-subtitle" id="confirmSubtitle"></div>
+        </div>
+
+        <!-- Booking strip -->
+        <div class="confirm-strip" aria-label="Buchungsdetails">
+          <div class="strip-item">
+            <div class="strip-label">Name</div>
+            <div class="strip-value" id="confirmStripName"><span class="strip-placeholder">–</span></div>
+          </div>
+          <div class="strip-item">
+            <div class="strip-label">E-Mail</div>
+            <div class="strip-value" id="confirmStripEmail"><span class="strip-placeholder">–</span></div>
+          </div>
+          <div class="strip-item">
+            <div class="strip-label">Termin</div>
+            <div class="strip-value" id="confirmStripDate"><span class="strip-placeholder">–</span></div>
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div class="confirm-body">
+
+          <p class="confirm-message">
+            Vielen Dank für Ihre Terminanfrage. Wir haben Ihre Buchung erhalten und werden Ihnen in Kürze eine
+            <strong>persönliche Bestätigungs-E-Mail</strong> zusenden.
+          </p>
+
+          <div class="warn-box" role="alert">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <div>
+              <div class="warn-box-title">Wichtig – Bitte bestätigen Sie Ihren Termin</div>
+              <div class="warn-box-text">
+                Sie erhalten von uns eine E-Mail mit einem Bestätigungslink.
+                Bitte bestätigen Sie Ihren Termin <strong>innerhalb von 48 Stunden</strong>,
+                da er sonst automatisch storniert wird.
+              </div>
+            </div>
+          </div>
+
+          <div class="confirm-steps">
+            <div class="confirm-step">
+              <div class="confirm-step-num">1</div>
+              <div class="confirm-step-text">Prüfen Sie Ihr <strong>E-Mail-Postfach</strong> — auch den Spam-Ordner.</div>
+            </div>
+            <div class="confirm-step">
+              <div class="confirm-step-num">2</div>
+              <div class="confirm-step-text">Klicken Sie auf den <strong>Bestätigungslink</strong> in der E-Mail.</div>
+            </div>
+            <div class="confirm-step">
+              <div class="confirm-step-num">3</div>
+              <div class="confirm-step-text">Ihr Termin ist damit <strong>verbindlich gebucht</strong>. Wir freuen uns auf Sie!</div>
+            </div>
+          </div>
+
+          <div class="confirm-divider"></div>
+
+          <div class="confirm-contact">
+            Fragen? Schreiben Sie uns an
+            <a href="mailto:jsv@privatpraxis-prof-abri.de">jsv@privatpraxis-prof-abri.de</a>
+            oder rufen Sie uns an.
+          </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="confirm-footer">
+          <div class="confirm-footer-name">Privatpraxis Prof. Dr. med. O. Abri</div>
+          <div class="confirm-footer-address">Fuggerstr. 30 · 10777 Berlin · Tel: 030-8093310-61</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MODERNIZATION NOTICE (visible on steps 1–3) -->
+    <div class="notice-box" id="noticeBox" aria-label="Hinweis zur Praxisverwaltung">
+      <div class="notice-icon" aria-hidden="true">💡</div>
+      <div class="notice-text">
+        <strong>Hinweis:</strong> Wir haben unser Praxis-Management modernisiert. Nach Ihrer Buchung erhalten Sie per E-Mail Ihren digitalen Anamnesebogen, Ihren Behandlungsvertrag sowie weitere Praxisdokumente zur bequemen digitalen Unterschrift. Auch als Bestandspatient/in bitten wir Sie einmalig, diese Unterlagen auszufüllen. <strong>Den Anamnesebogen füllen Sie am besten über einen Laptop oder Computer aus.</strong>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="siteFooter">
+    <div class="footer-privacy">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M7 1L2 3v4c0 2.76 2.13 5.35 5 6 2.87-.65 5-3.24 5-6V3L7 1z" stroke="#9ca3af" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M5 7l1.5 1.5L9.5 5.5" stroke="#9ca3af" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Ihre E-Mail-Adresse wird ausschließlich zur Identifikation verwendet. Alle Daten werden verschlüsselt auf deutschen Servern verarbeitet (DSGVO-konform).
+    </div>
+    <div style="margin-top:10px;">
+      <a href="https://vm.tiktok.com/ZNdfRn7Qk/" target="_blank" rel="noopener noreferrer"
+         style="display:inline-flex;align-items:center;gap:5px;font-size:.78rem;color:var(--gray-400);text-decoration:none;transition:color .2s;"
+         onmouseover="this.style.color='#3b6e4d'" onmouseout="this.style.color=''"
+         aria-label="Praxis auf TikTok">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13" aria-hidden="true">
+          <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.88a8.27 8.27 0 004.84 1.55V7a4.85 4.85 0 01-1.07-.31z"/>
+        </svg>
+        @prof.dr.abri auf TikTok
+      </a>
+    </div>
+  </footer>
+
+  <!-- =====================
+       CAL.COM EMBED SCRIPT
+  ===================== -->
+  <script type="text/javascript">
+    (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+    Cal("init", "neupatient", {origin:"https://app.cal.com"});
+  </script>
+
+  <script>
+    /* =====================
+       CONFIGURATION
+    ===================== */
+    const CONFIG = {
+      webhookUrl: 'https://workflow.praxis-nutu.de/webhook/verify-patient',
+    };
+
+    // Stores verified patient data for Bestandspatienten
+    let _verifiedEmail     = null;
+    let _verifiedFirstName = null;
+    let _verifiedLastName  = null;
+
+    /* =====================
+       STEP NAVIGATION
+    ===================== */
+    const FLOW_STEPS = ['step1', 'step2', 'step3success', 'step3fail', 'stepCal', 'stepBookingConfirm'];
+
+    function showStep(id) {
+      FLOW_STEPS.forEach(s => document.getElementById(s).classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateProgress(active) {
+      for (let i = 1; i <= 3; i++) {
+        const dot  = document.getElementById('dot' + i);
+        const line = document.getElementById('line' + i);
+        if (i < active) {
+          dot.className   = 'step-dot done';
+          dot.innerHTML   = '✓';
+          if (line) line.className = 'step-line done';
+        } else if (i === active) {
+          dot.className   = 'step-dot active';
+          dot.textContent = i;
+        } else {
+          dot.className   = 'step-dot';
+          dot.textContent = i;
+          if (line) line.className = 'step-line';
+        }
+      }
+    }
+
+    function goToStep1() {
+      showStep('step1');
+      updateProgress(1);
+      setCalLayout(false);
+    }
+
+    function goToStep2() {
+      showStep('step2');
+      updateProgress(2);
+      setCalLayout(false);
+      document.getElementById('verifyForm').reset();
+      clearFieldErrors();
+    }
+
+    /* =====================
+       CAL EMBED DISPLAY
+    ===================== */
+    function setCalLayout(active) {
+      const main     = document.getElementById('mainWrap');
+      const progress = document.getElementById('progressWrap');
+      const notice   = document.getElementById('noticeBox');
+      const footer   = document.getElementById('siteFooter');
+
+      if (active) {
+        main.classList.add('cal-active');
+        progress.classList.add('hidden');
+        notice.classList.add('hidden');
+        footer.classList.add('hidden');
+      } else {
+        main.classList.remove('cal-active');
+        progress.classList.remove('hidden');
+        notice.classList.remove('hidden');
+        footer.classList.remove('hidden');
+      }
+    }
+
+    /**
+     * openCalEmbed(isBestand, email, firstName, lastName)
+     *   isBestand  – true: Bestandspatient (show email bar + prefill)
+     *   email      – verified email (or null for Neupatienten)
+     *   firstName  – for Cal.com prefill (optional)
+     *   lastName   – for Cal.com prefill (optional)
+     */
+    function openCalEmbed(isBestand, email, firstName, lastName) {
+      updateProgress(3);
+      showStep('stepCal');
+      setCalLayout(true);
+
+      // Email hint bar
+      const hintBar   = document.getElementById('emailHintBar');
+      const hintValue = document.getElementById('emailHintValue');
+      if (isBestand && email) {
+        hintValue.textContent = email;
+        hintBar.classList.remove('hidden');
+      } else {
+        hintBar.classList.add('hidden');
+      }
+
+      // Reinitialize Cal.com embed (clear container first)
+      const container = document.getElementById('my-cal-inline-neupatient');
+      container.innerHTML = '';
+
+      const config = {
+        layout: "month_view",
+        useSlotsViewOnSmallScreen: "true",
+      };
+      if (email)                      config.email = email;
+      if (firstName || lastName)      config.name  = [firstName, lastName].filter(Boolean).join(' ');
+
+      Cal.ns.neupatient("inline", {
+        elementOrSelector: "#my-cal-inline-neupatient",
+        config,
+        calLink: "privat-praxis-prof-abri/neupatient",
+      });
+
+      Cal.ns.neupatient("ui", { hideEventTypeDetails: false, layout: "month_view" });
+
+      // Listen for successful booking → show confirmation screen
+      Cal.ns.neupatient("on", {
+        action: "bookingSuccessful",
+        callback: (e) => showBookingConfirmation(e?.detail?.data),
+      });
+    }
+
+    function showBookingConfirmation(data) {
+      showStep('stepBookingConfirm');
+      setCalLayout(false);
+      document.getElementById('progressWrap').classList.add('hidden');
+      // Re-show main padding for the confirmation card
+      document.getElementById('mainWrap').classList.add('cal-active'); // keep full-width off
+      document.getElementById('mainWrap').style.padding = '32px 16px 48px';
+
+      const booking   = data?.booking       || {};
+      const attendee  = booking?.attendees?.[0] || {};
+      const name      = attendee.name  || _verifiedFirstName ? [_verifiedFirstName, _verifiedLastName].filter(Boolean).join(' ') : '';
+      const email     = attendee.email || _verifiedEmail || '';
+      const startTime = booking?.startTime  || data?.startTime || '';
+
+      // Subtitle
+      if (name) document.getElementById('confirmSubtitle').textContent = 'Für ' + name;
+
+      // Strip – Name
+      document.getElementById('confirmStripName').textContent = name || '–';
+
+      // Strip – Email
+      document.getElementById('confirmStripEmail').textContent = email || '–';
+
+      // Strip – Date
+      if (startTime) {
+        try {
+          const d = new Date(startTime);
+          document.getElementById('confirmStripDate').textContent = d.toLocaleDateString('de-DE', {
+            weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
+          });
+        } catch { document.getElementById('confirmStripDate').textContent = startTime; }
+      } else {
+        document.getElementById('confirmStripDate').innerHTML = '<span class="strip-placeholder">–</span>';
+      }
+    }
+
+    // Called from step3success "Termin buchen" button
+    function proceedToCalFromSuccess() {
+      openCalEmbed(true, _verifiedEmail, _verifiedFirstName, _verifiedLastName);
+    }
+
+    /* =====================
+       COPY EMAIL TO CLIPBOARD
+    ===================== */
+    function copyEmail() {
+      const email  = document.getElementById('emailHintValue').textContent.trim();
+      const btn    = document.getElementById('copyBtn');
+      const btnTxt = document.getElementById('copyBtnText');
+
+      navigator.clipboard.writeText(email).then(() => {
+        btn.classList.add('copied');
+        btnTxt.textContent = 'Kopiert ✓';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btnTxt.textContent = 'Kopieren';
+        }, 2500);
+      }).catch(() => {
+        // Fallback for older browsers
+        const el = document.getElementById('emailHintValue');
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        document.execCommand('copy');
+        sel.removeAllRanges();
+        btn.classList.add('copied');
+        btnTxt.textContent = 'Kopiert ✓';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btnTxt.textContent = 'Kopieren';
+        }, 2500);
+      });
+    }
+
+    /* =====================
+       FORM VALIDATION
+    ===================== */
+    function clearFieldErrors() {
+      document.getElementById('email').classList.remove('error-field');
+      document.getElementById('birthdate').classList.remove('error-field');
+      document.getElementById('emailError').classList.remove('visible');
+      document.getElementById('birthdateError').classList.remove('visible');
+    }
+
+    function validateForm() {
+      let valid = true;
+      clearFieldErrors();
+
+      const email     = document.getElementById('email').value.trim();
+      const birthdate = document.getElementById('birthdate').value;
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        document.getElementById('email').classList.add('error-field');
+        document.getElementById('emailError').classList.add('visible');
+        valid = false;
+      }
+
+      if (!birthdate) {
+        document.getElementById('birthdate').classList.add('error-field');
+        document.getElementById('birthdateError').classList.add('visible');
+        valid = false;
+      }
+
+      return valid;
+    }
+
+    /* =====================
+       SUBMIT / WEBHOOK CALL
+    ===================== */
+    async function submitVerification(e) {
+      e.preventDefault();
+      if (!validateForm()) return;
+
+      const email     = document.getElementById('email').value.trim();
+      const birthdate = document.getElementById('birthdate').value;
+
+      const btn     = document.getElementById('verifyBtn');
+      const spinner = document.getElementById('verifySpinner');
+      const btnText = document.getElementById('verifyBtnText');
+      btn.disabled        = true;
+      spinner.classList.add('visible');
+      btnText.textContent = 'Wird geprüft…';
+
+      try {
+        // ⚠️ TEST BYPASS – remove before go-live
+        if (isTestCredentials(email, birthdate)) {
+          await new Promise(r => setTimeout(r, 600)); // simulate network delay
+          updateProgress(3);
+          _verifiedEmail     = email;
+          _verifiedFirstName = 'Max';
+          _verifiedLastName  = 'Mustermann';
+          document.getElementById('patientName').textContent = 'Max';
+          showStep('step3success');
+          return;
+        }
+        // ⚠️ END TEST BYPASS
+
+        const response = await fetch(CONFIG.webhookUrl, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ email, birth_date: birthdate }),
+        });
+
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+
+        const data = await response.json();
+
+        updateProgress(3);
+
+        if (data.verified === true) {
+          _verifiedEmail     = email;
+          _verifiedFirstName = data.first_name || null;
+          _verifiedLastName  = data.last_name  || null;
+          document.getElementById('patientName').textContent = data.first_name || 'Patient/in';
+          showStep('step3success');
+        } else {
+          showStep('step3fail');
+        }
+
+      } catch (err) {
+        console.error('Webhook error:', err);
+        updateProgress(3);
+        showStep('step3fail');
+      } finally {
+        btn.disabled       = false;
+        spinner.classList.remove('visible');
+        btnText.textContent = 'Identität prüfen';
+      }
+    }
+
+    /* =====================
+       TEST HELPERS – remove before go-live
+       Bypass: email=test@test.com + birthdate=2003-02-01
+    ===================== */
+    const TEST_EMAIL     = 'test@test.com';
+    const TEST_BIRTHDATE = '2003-02-01'; // YYYY-MM-DD (= 01.02.2003)
+
+    function isTestCredentials(email, birthdate) {
+      return email.toLowerCase() === TEST_EMAIL && birthdate === TEST_BIRTHDATE;
+    }
+
+    /* =====================
+       INIT
+    ===================== */
+    updateProgress(1);
+  </script>
+</body>
+</html>
