@@ -1224,12 +1224,16 @@
             oder rufen Sie uns an.
           </div>
 
+          <div style="margin-top:20px;">
+            <button class="btn btn-secondary" onclick="goToStep1()">← Zurück zur Startseite</button>
+          </div>
+
         </div>
 
         <!-- Footer -->
         <div class="confirm-footer">
           <div class="confirm-footer-name">Privatpraxis Prof. Dr. med. O. Abri</div>
-          <div class="confirm-footer-address">Fuggerstr. 30 · 10777 Berlin · Tel: 030-8093310-61</div>
+          <div class="confirm-footer-address">✉️ Fuggerstr. 23, 10777 Berlin &nbsp;·&nbsp; 📍 Fuggerstr. 30, 10777 Berlin &nbsp;·&nbsp; Tel: 030-8093310-61</div>
         </div>
 
       </div>
@@ -1254,7 +1258,12 @@
       </svg>
       Ihre E-Mail-Adresse wird ausschließlich zur Identifikation verwendet. Alle Daten werden verschlüsselt auf deutschen Servern verarbeitet (DSGVO-konform).
     </div>
-    <div style="margin-top:10px;">
+    <div style="margin-top:10px;font-size:.8rem;color:var(--gray-600);">
+      ✉️ <strong>Postanschrift:</strong> Fuggerstr. 23, 10777 Berlin &nbsp;·&nbsp;
+      📍 <strong>Sprechstunde:</strong> Fuggerstr. 30, 10777 Berlin &nbsp;·&nbsp;
+      Tel: 030-8093310-61
+    </div>
+    <div style="margin-top:8px;">
       <a href="https://vm.tiktok.com/ZNdfRn7Qk/" target="_blank" rel="noopener noreferrer"
          style="display:inline-flex;align-items:center;gap:5px;font-size:.78rem;color:var(--gray-400);text-decoration:none;transition:color .2s;"
          onmouseover="this.style.color='#3b6e4d'" onmouseout="this.style.color=''"
@@ -1339,18 +1348,15 @@
       const main     = document.getElementById('mainWrap');
       const progress = document.getElementById('progressWrap');
       const notice   = document.getElementById('noticeBox');
-      const footer   = document.getElementById('siteFooter');
 
       if (active) {
         main.classList.add('cal-active');
         progress.classList.add('hidden');
         notice.classList.add('hidden');
-        footer.classList.add('hidden');
       } else {
         main.classList.remove('cal-active');
         progress.classList.remove('hidden');
         notice.classList.remove('hidden');
-        footer.classList.remove('hidden');
       }
     }
 
@@ -1412,7 +1418,7 @@
 
       const booking   = data?.booking       || {};
       const attendee  = booking?.attendees?.[0] || {};
-      const name      = attendee.name  || _verifiedFirstName ? [_verifiedFirstName, _verifiedLastName].filter(Boolean).join(' ') : '';
+      const name      = attendee.name  || [_verifiedFirstName, _verifiedLastName].filter(Boolean).join(' ');
       const email     = attendee.email || _verifiedEmail || '';
       const startTime = booking?.startTime  || data?.startTime || '';
 
@@ -1528,19 +1534,6 @@
       btnText.textContent = 'Wird geprüft…';
 
       try {
-        // ⚠️ TEST BYPASS – remove before go-live
-        if (isTestCredentials(email, birthdate)) {
-          await new Promise(r => setTimeout(r, 600)); // simulate network delay
-          updateProgress(3);
-          _verifiedEmail     = email;
-          _verifiedFirstName = 'Max';
-          _verifiedLastName  = 'Mustermann';
-          document.getElementById('patientName').textContent = 'Max';
-          showStep('step3success');
-          return;
-        }
-        // ⚠️ END TEST BYPASS
-
         const response = await fetch(CONFIG.webhookUrl, {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1572,17 +1565,6 @@
         spinner.classList.remove('visible');
         btnText.textContent = 'Identität prüfen';
       }
-    }
-
-    /* =====================
-       TEST HELPERS – remove before go-live
-       Bypass: email=test@test.com + birthdate=2003-02-01
-    ===================== */
-    const TEST_EMAIL     = 'test@test.com';
-    const TEST_BIRTHDATE = '2003-02-01'; // YYYY-MM-DD (= 01.02.2003)
-
-    function isTestCredentials(email, birthdate) {
-      return email.toLowerCase() === TEST_EMAIL && birthdate === TEST_BIRTHDATE;
     }
 
     /* =====================
